@@ -3,7 +3,6 @@ package com.example.sports_betting_settlement;
 import com.example.sports_betting_settlement.dto.EventOutcome;
 import com.example.sports_betting_settlement.model.Bet;
 import com.example.sports_betting_settlement.repository.BetRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
@@ -12,8 +11,11 @@ import java.util.List;
 @Service
 public class SettlementService {
 
-    @Autowired
-    private BetRepository betRepository;
+    private final BetRepository betRepository;
+
+    public SettlementService(BetRepository betRepository) {
+        this.betRepository = betRepository;
+    }
 
     // This annotation tells Spring to listen to Kafka 24/7
     @KafkaListener(topics = "event-outcomes", groupId = "betting-group")
