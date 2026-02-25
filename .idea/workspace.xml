@@ -4,16 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2c9631e1-a414-43c2-8869-2339561e02f4" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/sports_betting_settlement/service/RocketMQVerificationConsumer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/my-db.lock.db" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/my-db.mv.db" beforeDir="false" afterPath="$PROJECT_DIR$/data/my-db.mv.db" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/sports_betting_settlement/dto/BetSettlementTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/sports_betting_settlement/dto/BetSettlementTask.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/sports_betting_settlement/service/KafkaConsumerService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/sports_betting_settlement/service/KafkaConsumerService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/example/sports_betting_settlement/SettlementServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/example/sports_betting_settlement/SettlementServiceTest.java" afterDir="false" />
-    </list>
+    <list default="true" id="2c9631e1-a414-43c2-8869-2339561e02f4" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -64,7 +55,7 @@
     ]
   }
 }</component>
-  <component name="RunManager" selected="Spring Boot.SportsBettingSettlementApplication">
+  <component name="RunManager" selected="JUnit.SettlementServiceTest">
     <configuration name="SettlementServiceTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="sports-betting-settlement" />
       <extension name="coverage">
@@ -123,12 +114,23 @@
       <workItem from="1772013472847" duration="2022000" />
       <workItem from="1772015633655" duration="778000" />
       <workItem from="1772018359067" duration="105000" />
-      <workItem from="1772018578400" duration="13087000" />
+      <workItem from="1772018578400" duration="13454000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

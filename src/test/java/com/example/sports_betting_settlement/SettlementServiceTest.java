@@ -1,10 +1,11 @@
-/*
 package com.example.sports_betting_settlement;
 
+import com.example.sports_betting_settlement.dto.BetSettlementTask;
 import com.example.sports_betting_settlement.dto.EventOutcome;
 import com.example.sports_betting_settlement.model.Bet;
 import com.example.sports_betting_settlement.repository.BetRepository;
 import com.example.sports_betting_settlement.service.KafkaConsumerService;
+import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,10 +25,13 @@ class SettlementServiceTest {
     @Mock
     BetRepository betRepository;
 
+    @Mock
+    RocketMQTemplate rocketMQTemplate; // Added Mock for RocketMQ
+
     KafkaConsumerService settlementService;
 
     @Captor
-    ArgumentCaptor<Bet> betCaptor;
+    ArgumentCaptor<BetSettlementTask> taskCaptor; // Changed to capture the Task Record
 
     @BeforeEach
     void setUp() {
@@ -35,7 +39,7 @@ class SettlementServiceTest {
     }
 
     @Test
-    void processOutcome_noBets_doesNotSaveAnything() {
+    void processOutcome_noBets_doesNotSendToRocketMQ() {
         // given
         EventOutcome outcome = new EventOutcome("E1", "Match 1", "TEAM_A");
         when(betRepository.findByEventId("E1")).thenReturn(List.of());
@@ -45,12 +49,11 @@ class SettlementServiceTest {
 
         // then
         verify(betRepository).findByEventId("E1");
-        verify(betRepository, never()).save(any());
-        verifyNoMoreInteractions(betRepository);
+        verifyNoInteractions(rocketMQTemplate); // Verify nothing was sent
     }
 
     @Test
-    void processOutcome_singleBetWinner_matchesOutcome_setsWonAndSaves() {
+    void processOutcome_singleBetWinner_dispatchesCorrectTask() {
         // given
         EventOutcome outcome = new EventOutcome("E1", "Match 1", "TEAM_A");
 
@@ -58,76 +61,53 @@ class SettlementServiceTest {
         bet.setBetId(1L);
         bet.setUserId("U1");
         bet.setEventId("E1");
-        bet.setEventWinnerId("TEAM_A"); // user predicted TEAM_A
+        bet.setEventMarketId("M1");
+        bet.setEventWinnerId("TEAM_A"); // User predicted TEAM_A
+        bet.setBetAmount(100.0);
 
         when(betRepository.findByEventId("E1")).thenReturn(List.of(bet));
-        when(betRepository.save(any(Bet.class))).thenAnswer(inv -> inv.getArgument(0));
 
         // when
         settlementService.processOutcome(outcome);
 
         // then
-        verify(betRepository).save(betCaptor.capture());
-        Bet saved = betCaptor.getValue();
-        assertThat(saved.getStatus()).isEqualTo("WON");
+        // Verify call to RocketMQ instead of DB save
+        verify(rocketMQTemplate).convertAndSend(eq("bet-settlements"), taskCaptor.capture());
+
+        BetSettlementTask capturedTask = taskCaptor.getValue();
+        assertThat(capturedTask.status()).isEqualTo("WON");
+        assertThat(capturedTask.betId()).isEqualTo(1L);
+        assertThat(capturedTask.betAmount()).isEqualByComparingTo(100.00);
     }
 
     @Test
-    void processOutcome_singleBetWinner_doesNotMatchOutcome_setsLostAndSaves() {
+    void processOutcome_multipleBets_dispatchesMultipleTasks() {
         // given
         EventOutcome outcome = new EventOutcome("E1", "Match 1", "TEAM_A");
 
-        Bet bet = new Bet();
-        bet.setBetId(1L);
-        bet.setUserId("U1");
-        bet.setEventId("E1");
-        bet.setEventWinnerId("TEAM_B"); // user predicted TEAM_B
-
-        when(betRepository.findByEventId("E1")).thenReturn(List.of(bet));
-        when(betRepository.save(any(Bet.class))).thenAnswer(inv -> inv.getArgument(0));
-
-        // when
-        settlementService.processOutcome(outcome);
-
-        // then
-        verify(betRepository).save(betCaptor.capture());
-        Bet saved = betCaptor.getValue();
-        assertThat(saved.getStatus()).isEqualTo("LOST");
-    }
-
-    @Test
-    void processOutcome_multipleBets_setsCorrectStatusesAndSavesEach() {
-        // given
-        EventOutcome outcome = new EventOutcome("E1", "Match 1", "TEAM_A");
-
-        Bet bet1 = new Bet();
-        bet1.setBetId(1L);
-        bet1.setUserId("U1");
-        bet1.setEventId("E1");
-        bet1.setEventWinnerId("TEAM_A");
-
-        Bet bet2 = new Bet();
-        bet2.setBetId(2L);
-        bet2.setUserId("U2");
-        bet2.setEventId("E1");
-        bet2.setEventWinnerId("TEAM_B");
+        Bet bet1 = createBet(1L, "TEAM_A"); // Winner
+        Bet bet2 = createBet(2L, "TEAM_B"); // Loser
 
         when(betRepository.findByEventId("E1")).thenReturn(List.of(bet1, bet2));
-        when(betRepository.save(any(Bet.class))).thenAnswer(inv -> inv.getArgument(0));
 
         // when
         settlementService.processOutcome(outcome);
 
         // then
-        verify(betRepository, times(2)).save(betCaptor.capture());
-        List<Bet> savedBets = betCaptor.getAllValues();
+        verify(rocketMQTemplate, times(2)).convertAndSend(eq("bet-settlements"), taskCaptor.capture());
+        List<BetSettlementTask> capturedTasks = taskCaptor.getAllValues();
 
-        // order is same as loop order
-        assertThat(savedBets.get(0).getBetId()).isEqualTo(1L);
-        assertThat(savedBets.get(0).getStatus()).isEqualTo("WON");
+        assertThat(capturedTasks.get(0).status()).isEqualTo("WON");
+        assertThat(capturedTasks.get(1).status()).isEqualTo("LOST");
+    }
 
-        assertThat(savedBets.get(1).getBetId()).isEqualTo(2L);
-        assertThat(savedBets.get(1).getStatus()).isEqualTo("LOST");
+    // Helper method to keep test code clean
+    private Bet createBet(Long id, String prediction) {
+        Bet bet = new Bet();
+        bet.setBetId(id);
+        bet.setEventId("E1");
+        bet.setEventWinnerId(prediction);
+        bet.setBetAmount(10.0);
+        return bet;
     }
 }
-*/
