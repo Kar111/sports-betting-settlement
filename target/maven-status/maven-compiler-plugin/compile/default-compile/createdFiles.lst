@@ -3,6 +3,7 @@ com/example/sports_betting_settlement/service/RocketMQVerificationConsumer.class
 com/example/sports_betting_settlement/dto/BetSettlementTask.class
 com/example/sports_betting_settlement/model/Bet.class
 com/example/sports_betting_settlement/config/KafkaTopicConfig.class
+com/example/sports_betting_settlement/dto/BetResponse.class
 com/example/sports_betting_settlement/dto/EventOutcome.class
 com/example/sports_betting_settlement/repository/BetRepository.class
 com/example/sports_betting_settlement/controller/EventController.class
