@@ -3,6 +3,7 @@ package com.example.sports_betting_settlement;
 import com.example.sports_betting_settlement.dto.EventOutcome;
 import com.example.sports_betting_settlement.model.Bet;
 import com.example.sports_betting_settlement.repository.BetRepository;
+import com.example.sports_betting_settlement.service.KafkaConsumerService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,14 +23,14 @@ class SettlementServiceTest {
     @Mock
     BetRepository betRepository;
 
-    SettlementService settlementService;
+    KafkaConsumerService settlementService;
 
     @Captor
     ArgumentCaptor<Bet> betCaptor;
 
     @BeforeEach
     void setUp() {
-        settlementService = new SettlementService(betRepository);
+        settlementService = new KafkaConsumerService(betRepository);
     }
 
     @Test
