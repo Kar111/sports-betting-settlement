@@ -3,6 +3,7 @@ package com.example.sports_betting_settlement.service;
 import com.example.sports_betting_settlement.dto.EventOutcome;
 import com.example.sports_betting_settlement.model.Bet;
 import com.example.sports_betting_settlement.repository.BetRepository;
+import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
@@ -12,9 +13,11 @@ import java.util.List;
 public class KafkaConsumerService {
 
     private final BetRepository betRepository;
+    private final RocketMQTemplate rocketMQTemplate;
 
-    public KafkaConsumerService(BetRepository betRepository) {
+    public KafkaConsumerService(BetRepository betRepository, RocketMQTemplate rocketMQTemplate) {
         this.betRepository = betRepository;
+        this.rocketMQTemplate = rocketMQTemplate;
     }
 
     // This annotation tells Spring to listen to Kafka 24/7
@@ -40,6 +43,11 @@ public class KafkaConsumerService {
             // 3. Update H2
             betRepository.save(bet);
             System.out.println("✅ Bet " + bet.getBetId() + " settled for user: " + bet.getUserId());
+
+            // 3. New RocketMQ Production
+            // We send the settled bet object to a new RocketMQ topic
+            rocketMQTemplate.convertAndSend("bet-settlements", bet);
+            System.out.println("📤 RocketMQ: Published result for bet " + bet.getBetId());
         }
     }
 }
