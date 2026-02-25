@@ -1,5 +1,6 @@
 package com.example.sports_betting_settlement.service;
 
+import com.example.sports_betting_settlement.dto.BetSettlementTask;
 import com.example.sports_betting_settlement.dto.EventOutcome;
 import com.example.sports_betting_settlement.model.Bet;
 import com.example.sports_betting_settlement.repository.BetRepository;
@@ -23,31 +24,32 @@ public class KafkaConsumerService {
     // This annotation tells Spring to listen to Kafka 24/7
     @KafkaListener(topics = "event-outcomes", groupId = "betting-group")
     public void processOutcome(EventOutcome outcome) {
-        System.out.println("🚀 Received Outcome: " + outcome.eventName() + " (Winner: " + outcome.winnerId() + ")");
+        System.out.println("🚀 Kafka: Received Outcome for " + outcome.eventName());
 
-        // 1. Fetch PENDING bets for this event
-        List<Bet> bets = betRepository.findByEventId(outcome.eventId());
+        // 1. Match outcome to bets in DB
+        List<Bet> matchingBets = betRepository.findByEventId(outcome.eventId());
 
-        if (bets.isEmpty()) {
-            System.out.println("⚠️ No bets found in DB for Event ID: " + outcome.eventId());
+        if (matchingBets.isEmpty()) {
+            System.out.println("⚠️ No bets found for Event ID: " + outcome.eventId());
             return;
         }
+        for (Bet bet : matchingBets) {
+            String finalStatus = bet.getEventWinnerId().equals(outcome.winnerId()) ? "WON" : "LOST";
 
-        // 2. Settlement Logic
-        for (Bet bet : bets) {
-            if (bet.getEventWinnerId().equals(outcome.winnerId())) {
-                bet.setStatus("WON");
-            } else {
-                bet.setStatus("LOST");
-            }
-            // 3. Update H2
-            betRepository.save(bet);
-            System.out.println("✅ Bet " + bet.getBetId() + " settled for user: " + bet.getUserId());
+            // Creating the Record instance
+            BetSettlementTask task = new BetSettlementTask(
+                    bet.getBetId(),
+                    bet.getUserId(),
+                    bet.getEventId(),
+                    bet.getEventMarketId(),
+                    bet.getEventWinnerId(),
+                    bet.getBetAmount(),
+                    finalStatus
+            );
 
-            // 3. New RocketMQ Production
-            // We send the settled bet object to a new RocketMQ topic
-            rocketMQTemplate.convertAndSend("bet-settlements", bet);
-            System.out.println("📤 RocketMQ: Published result for bet " + bet.getBetId());
+            rocketMQTemplate.convertAndSend("bet-settlements", task);
+            System.out.println("📤 Kafka: Matching bet " + task.betId() + " dispatched to RocketMQ.");
         }
+
     }
 }
