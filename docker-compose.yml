@@ -38,6 +38,7 @@ services:
       - -c
       - |
         echo "brokerIP1 = 127.0.0.1" > ../conf/broker.conf
+        echo "autoCreateTopicEnable = true" >> ../conf/broker.conf
         sh mqbroker -c ../conf/broker.conf
     depends_on:
       - namesrv

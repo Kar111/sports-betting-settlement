@@ -1,7 +1,9 @@
-/Users/danielbaghdasaryan/Documents/sports-betting-settlement/src/main/java/com/example/sports_betting_settlement/SettlementService.java
 /Users/danielbaghdasaryan/Documents/sports-betting-settlement/src/main/java/com/example/sports_betting_settlement/SportsBettingSettlementApplication.java
 /Users/danielbaghdasaryan/Documents/sports-betting-settlement/src/main/java/com/example/sports_betting_settlement/config/KafkaTopicConfig.java
 /Users/danielbaghdasaryan/Documents/sports-betting-settlement/src/main/java/com/example/sports_betting_settlement/controller/EventController.java
+/Users/danielbaghdasaryan/Documents/sports-betting-settlement/src/main/java/com/example/sports_betting_settlement/dto/BetSettlementTask.java
 /Users/danielbaghdasaryan/Documents/sports-betting-settlement/src/main/java/com/example/sports_betting_settlement/dto/EventOutcome.java
 /Users/danielbaghdasaryan/Documents/sports-betting-settlement/src/main/java/com/example/sports_betting_settlement/model/Bet.java
 /Users/danielbaghdasaryan/Documents/sports-betting-settlement/src/main/java/com/example/sports_betting_settlement/repository/BetRepository.java
+/Users/danielbaghdasaryan/Documents/sports-betting-settlement/src/main/java/com/example/sports_betting_settlement/service/KafkaConsumerService.java
+/Users/danielbaghdasaryan/Documents/sports-betting-settlement/src/main/java/com/example/sports_betting_settlement/service/RocketMQVerificationConsumer.java

@@ -18,11 +18,12 @@ public class RocketMQVerificationConsumer implements RocketMQListener<BetSettlem
 
     @Override
     public void onMessage(BetSettlementTask task) {
-        System.out.println("📬 RocketMQ Worker received: " + task.betId() + " for user " + task.userId());
+        System.out.println("📬 RocketMQ received: " + task.betId() + " for user " + task.userId());
 
         betRepository.findById(task.betId()).ifPresent(bet -> {
             bet.setStatus(task.status()); // Using record accessor
             betRepository.save(bet);
-            System.out.println("💾 H2 Updated: Bet status is now " + task.status());
-        });    }
+            System.out.println("💾 H2 Updated: Bet status for the betId " + bet.getBetId() + " is now " + task.status() + " for the user " + task.userId());
+        });
+    }
 }

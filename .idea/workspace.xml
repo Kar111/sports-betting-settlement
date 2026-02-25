@@ -4,7 +4,20 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2c9631e1-a414-43c2-8869-2339561e02f4" name="Changes" comment="" />
+    <list default="true" id="2c9631e1-a414-43c2-8869-2339561e02f4" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/my-db.lock.db" beforeDir="false" afterPath="$PROJECT_DIR$/data/my-db.lock.db" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/my-db.mv.db" beforeDir="false" afterPath="$PROJECT_DIR$/data/my-db.mv.db" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/sports_betting_settlement/service/RocketMQVerificationConsumer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/sports_betting_settlement/service/RocketMQVerificationConsumer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-archiver/pom.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/sports-betting-settlement-0.0.1-SNAPSHOT.jar.original" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/surefire-reports/TEST-com.example.sports_betting_settlement.SettlementServiceTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/surefire-reports/TEST-com.example.sports_betting_settlement.SportsBettingSettlementApplicationTests.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/surefire-reports/com.example.sports_betting_settlement.SettlementServiceTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/surefire-reports/com.example.sports_betting_settlement.SportsBettingSettlementApplicationTests.txt" beforeDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -55,7 +68,7 @@
     ]
   }
 }</component>
-  <component name="RunManager" selected="JUnit.SettlementServiceTest">
+  <component name="RunManager" selected="Spring Boot.SportsBettingSettlementApplication">
     <configuration name="SettlementServiceTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="sports-betting-settlement" />
       <extension name="coverage">
@@ -114,7 +127,7 @@
       <workItem from="1772013472847" duration="2022000" />
       <workItem from="1772015633655" duration="778000" />
       <workItem from="1772018359067" duration="105000" />
-      <workItem from="1772018578400" duration="13454000" />
+      <workItem from="1772018578400" duration="16534000" />
     </task>
     <servers />
   </component>
