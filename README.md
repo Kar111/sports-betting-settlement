@@ -4,21 +4,6 @@ This project is a high-performance backend simulation designed to handle sports 
 
 ---
 
-## 🏗️ Architecture Summary
-
-The system is designed for high-throughput and reliable processing by separating concerns:
-
-1.  **REST API**: Receives game results.
-2.  **Kafka (`event-outcomes`)**: Used for high-throughput domain events (game outcomes).
-3.  **Kafka Consumer**: Fetches matching bets from the database.
-4.  **RocketMQ (`bet-settlements`)**: Used for reliable, asynchronous settlement commands.
-5.  **RocketMQ Consumer**: Executes the final settlement and logic.
-6.  **H2 Database**: Stores bet data and final settlement status.
-
-[Image of event-driven architecture diagram for sports betting]
-
----
-
 ## 🛠️ Prerequisites
 
 * **Java 17** (JDK)
@@ -36,27 +21,27 @@ Launch the containers in the background:
 docker-compose up -d
 
 
-Note: Please wait ~20 seconds for RocketMQ to fully initialize before starting the application.
+Note: Please wait ~20 seconds for RocketMQ to fully initialize before starting the application. You can write sleep 20 ;)
 
-2. Run the Application
+### 2. Run the Application
 Start the Spring Boot service:
 
-Bash
+## Bash
 mvn spring-boot:run
 The application will be available at http://localhost:8080.
 
-🧪 Testing the Flow
+## 🧪 Testing the Flow
 Follow these steps to observe the end-to-end settlement process:
 
 1. Check Initial Bets
 Verify the current state of the database (bets should be PENDING):
 
-Bash
+## Bash
 curl http://localhost:8080/api/events/bets
 2. Publish an Event Outcome
 Simulate a game result. This sends a message to Kafka:
 
-Bash
+ ## Bash
 curl -X POST http://localhost:8080/api/events/outcome \
 -H "Content-Type: application/json" \
 -d '{
@@ -64,12 +49,14 @@ curl -X POST http://localhost:8080/api/events/outcome \
   "eventName": "Lakers vs Bulls", 
   "winnerId": "LAL"
 }'
-3. Verify Settlement
+### 3. Verify Settlement
 Check the bets again. The RocketMQ consumer will have updated the records to WON or LOST:
 
-Bash
+## Bash
 curl http://localhost:8080/api/events/bets
-🔍 Technical Notes (Environment & Compatibility)
+
+
+## 🔍 Technical Notes (Environment & Compatibility)
 This project was developed and optimized for macOS (Apple Silicon/ARM64). Specific configurations ensure cross-platform stability:
 
 Docker Platform: docker-compose.yml uses platform: linux/amd64 tags. This ensures Apache RocketMQ and Kafka images run correctly on Apple Silicon (M1/M2/M3) without architecture mismatches.
